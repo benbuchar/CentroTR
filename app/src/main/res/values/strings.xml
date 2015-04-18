@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CentroTR</string>
+    <string name="title_activity_main">CentroTR</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_schedule">Schedule</string>
+    <string name="action_help">Help</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Blue Route</item>
+        <item>Green Route</item>
+        <item>1A - Walmart</item>
+    </string-array>
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_action_split</item>
+    </array>
+
+    <!-- Settings map style -->
+    <string-array name="s_map_style">
+        <item>Satellite View</item>
+        <item>Map View</item>
+    </string-array>
+    <string-array name="s_map_style_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Settings Default Route -->
+    <string-array name="s_default_route">
+        <item>Blue Route</item>
+        <item>Green Route</item>
+        <item>1A - Walmart</item>
+    </string-array>
+    <string-array name="s_default_route_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_reconnect">ReconnectActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="select_menu">Select Menu</string>
+    <string name="createNotification">Create Notification</string>
+    <string name="deleteNotification">Delete Notification</string>
+
+</resources>
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<resources>-->
+    <!--<string name="app_name">CentroTR</string>-->
+    <!--<string name="title_activity_centro_trmap">Map</string>-->
+    <!--<string name="action_settings">Settings</string>-->
+    <!--<string name="hello_world">Tap two locations in the map</string>-->
+    <!--<string name="str_tv_distance_time">Distance</string>-->
+<!--</resources>-->
+
+<!--<resources>-->
+<!--<string name="app_name">CentroTR</string>-->
+<!--<string name="title_activity_centro_trmap">Map</string>-->
+<!--<string name="hello_world">Hello world!</string>-->
+<!--<string name="action_settings">Settings</string>-->
+<!--<string name="select_menu">Select Menu</string>-->
+<!--<string-array name="menu_names" >-->
+    <!--<item>Route</item>-->
+    <!--<item>Null</item>-->
+    <!--<item>Null</item>-->
+    <!--<item>Null</item>-->
+<!--</string-array>-->
+<!--</resources>-->
+
