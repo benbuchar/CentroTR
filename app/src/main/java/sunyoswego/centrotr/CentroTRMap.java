@@ -1,12 +1,21 @@
 package sunyoswego.centrotr;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,19 +42,16 @@ import java.util.List;
 public class CentroTRMap extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-//    RouteHighlighter highlighter;
-
+    RouteHighlighter highlighter;
+    NavDrawer drawer = new NavDrawer();
     //Creating the Blue Route object
     BusRoute blueRoute = new BusRoute("blueRoute");
-
+    Vehicle blueRouteVehicle = new Vehicle("blueRoute");
     //Creating the Green Route object
 //    BusRoute greenRoute = new BusRoute("greenRoute");
 
 //    Vehicle blueRouteVehicle = new Vehicle("blueRoute");
 
-    LatLng four = new LatLng(43.453838, -76.540628);
-    LatLng five = new LatLng(43.447918, -76.534195);
-    LatLng six = new LatLng(43.446368, -76.5346240 );
 
 
     @Override
@@ -54,13 +60,162 @@ public class CentroTRMap extends FragmentActivity {
         setContentView(R.layout.activity_centro_trmap);
 
         //Loading the route points and the bus stops
-        blueRoute.loadRoute();
+//        blueRoute.loadRoute();
+
         //Loading the route points and the bus stops
 //        greenRoute.loadRoute();
 
         setUpMapIfNeeded();
+        setUpDrawerNavigation();
+        try {
+            blueRoute.loadRoute(mMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void setUpDrawerNavigation() {
+
+        /*** DRAWER ****/
+        drawer.mTitle = drawer.mDrawerTitle = getTitle();
+        // load slide menu items -> Bus Routes names
+        drawer.navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+
+        // nav drawer icons from resources
+        drawer.navMenuIcons = getResources()
+                .obtainTypedArray(R.array.nav_drawer_icons);
+
+        drawer.mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+
+        drawer.navDrawerItems = new ArrayList<NavDrawerItem>();
+
+        // adding nav drawer items to array
+        // Routes
+        // Blue Route
+        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[0], drawer.navMenuIcons.getResourceId(0, -1)));
+        // Green Route
+        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[1],drawer.navMenuIcons.getResourceId(0, -1)));
+        // 1A
+        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[2],drawer.navMenuIcons.getResourceId(0, -1)));
 
 
+        // setting the nav drawer list adapter
+        drawer.adapter = new NavDrawerListAdapter(getApplicationContext(),
+                drawer.navDrawerItems);
+        drawer.mDrawerList.setAdapter(drawer.adapter);
+
+        // enabling action bar app icon and behaving it as toggle button
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        drawer.mDrawerToggle = new ActionBarDrawerToggle(this, drawer.mDrawerLayout,
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ){
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(drawer.mTitle);
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(drawer.mDrawerTitle);
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+        drawer.mDrawerLayout.setDrawerListener(drawer.mDrawerToggle);
+
+        drawer.mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // toggle nav drawer on selecting action bar app icon/title
+        if (drawer.mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle action bar actions click
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                //changes to settings page
+                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivityForResult(settingsIntent, 1);
+                return true;
+            case R.id.action_schedule:
+                Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    /***
+     * Called when invalidateOptionsMenu() is triggered
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // if nav drawer is opened, hide the action items
+        boolean drawerOpen = drawer.mDrawerLayout.isDrawerOpen(drawer.mDrawerList);
+        //menu.findItem(R.id.action_overflow).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        drawer.mTitle = title;
+        getActionBar().setTitle(drawer.mTitle);
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer.mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        drawer.mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    public void changeRoute(BusRoute route, boolean g){ //changes the current route being highlighted on the map
+        mMap.clear();
+        highlighter = new RouteHighlighter(mMap);
+        highlighter.enableRoute(route, g);
+    }
+
+    /**
+     * Diplaying fragment view for selected nav drawer list item
+     * */
+    private void displayView(int position) {
+
+        switch (position) {
+            case 0:
+                changeRoute(blueRoute, false);
+                blueRouteVehicle.loadMapPosition(mMap);
+                break;
+//            case 1:
+//                blueRouteVehicle.stopLoadingPosition();
+//                changeRoute(greenRoute, true);
+//                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
+        // update selected item and title, then close the drawer
+        drawer.mDrawerList.setItemChecked(position, true);
+        drawer.mDrawerList.setSelection(position);
+        setTitle(drawer.navMenuTitles[position]);
+        drawer.mDrawerLayout.closeDrawer(drawer.mDrawerList);
     }
 
     @Override
@@ -97,26 +252,26 @@ public class CentroTRMap extends FragmentActivity {
 
     private void setUpMap() {
         LatLng one = new LatLng(43.453838, -76.540628);
-        LatLng two = new LatLng(43.452743, -76.530012);
-        LatLng three = new LatLng(43.454743, -76.550012);
+//        LatLng two = new LatLng(43.452743, -76.530012);
+//        LatLng three = new LatLng(43.454743, -76.550012);
 
-        mMap.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(one, (float) 14.5));
-        mMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
-                .title("four")
-                .snippet("2*2")
-                .position(four));
-        mMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
-                .title("five")
-                .snippet("5*1")
-                .position(five));
-        mMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
-                .title("six")
-                .snippet("2*3")
-                .position(six));
+//        mMap.addMarker(new MarkerOptions()
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
+//                .title("four")
+//                .snippet("2*2")
+//                .position(four));
+//        mMap.addMarker(new MarkerOptions()
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
+//                .title("five")
+//                .snippet("5*1")
+//                .position(five));
+//        mMap.addMarker(new MarkerOptions()
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
+//                .title("six")
+//                .snippet("2*3")
+//                .position(six));
 //        mMap.addPolyline(new PolylineOptions()
 //                .add(one,two,three)
 //                .width(10)
@@ -125,6 +280,18 @@ public class CentroTRMap extends FragmentActivity {
 
     }
 
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements
+            ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            // display view for selected nav drawer item
+            displayView(position);
+        }
+    }
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 

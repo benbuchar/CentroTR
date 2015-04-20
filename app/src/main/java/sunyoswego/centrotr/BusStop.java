@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package sunyoswego.centrotr;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -8,11 +23,12 @@ public class BusStop {
     LatLng alertPosition;
     Integer notificationId;
 
-    public BusStop(String n, LatLng coordinates, LatLng alertPosition, Integer notificationId){
+//    public BusStop(String n, LatLng coordinates, LatLng alertPosition, Integer notificationId){
+        public BusStop(String n, LatLng coordinates){
         this.name = n;
         this.coordinates = coordinates;
-        this.alertPosition = alertPosition;
-        this.notificationId = notificationId;
+//        this.alertPosition = alertPosition;
+//        this.notificationId = notificationId;
     }
 
     public LatLng getCoordinates() {
