@@ -23,9 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
 
-    public static final int NOTIFICATION_ID = 1; //this can be any int
     final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/blueRouteVehicle.xml";
-
     GoogleMap map;
     Document doc;
     String url;
@@ -36,8 +34,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     double lat, lon;
 
     String vehicleName;
-    ArrayList<LatLng> notifications; //stored coordinates where the user wants a notification
-
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
     float direction;
@@ -50,7 +46,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
             this.vehicleName = vehicleName;
             this.vehicleArrow = vehicleArrow;
             map = mMap;
-            this.notifications = notifications;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
@@ -64,25 +59,13 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
     private void parse(){
         try {
-
-            if(vehicleName.equals("blueRoute")) {
-                url = urlBlueRoute;
-            }
-
-            //Log.i("XMLParser", "Parsing " + vehicleName);
-
+            url = urlBlueRoute;
             doc = dBuilder.parse(new URL(url).openStream());
             doc.getDocumentElement().normalize();
-
             NodeList nList = doc.getElementsByTagName("busResponse");
-
-
             Node nNode = nList.item(0);
 
-            //Log.i("MESSAGE", "\nCurrent Element :" + nNode.getNodeName());
-
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
                 Element eElement = (Element) nNode;
 
                 direction = Float.parseFloat(eElement.getElementsByTagName("hdg").item(0).getTextContent().trim());
@@ -92,10 +75,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
 
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
-
-
             }
-
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -106,7 +86,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         vehicleMarker.setPosition(new LatLng(lat, lon));
-        //vehicleMarker.setRotation(direction);
         vehicleArrow.setPosition(new LatLng(lat, lon));
         vehicleArrow.setRotation(direction);
     }

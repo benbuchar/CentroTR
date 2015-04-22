@@ -1,9 +1,5 @@
 package sunyoswego.centrotr;
 
-/**
- * Created by Lucas on 3/10/2015.
- */
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -47,12 +43,8 @@ public class NavDrawerListAdapter extends BaseAdapter {
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
         }
-
-        ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
         TextView txtCount = (TextView) convertView.findViewById(R.id.counter);
-
-        //imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
         txtTitle.setText(navDrawerItems.get(position).getTitle());
 
         // displaying count
@@ -63,8 +55,6 @@ public class NavDrawerListAdapter extends BaseAdapter {
             // hide the counter view
             txtCount.setVisibility(View.GONE);
         }
-
         return convertView;
     }
-
 }

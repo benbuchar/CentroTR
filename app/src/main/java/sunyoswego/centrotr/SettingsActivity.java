@@ -11,14 +11,10 @@ import android.view.MenuItem;
 
 public class SettingsActivity extends PreferenceActivity {
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
@@ -43,7 +39,6 @@ public class SettingsActivity extends PreferenceActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     //inner class needed because addPreferencesFromResource is deprecated in PreferenceActivity
     public static class SettingsFragment extends PreferenceFragment {

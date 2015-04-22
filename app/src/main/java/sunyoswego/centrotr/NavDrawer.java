@@ -7,25 +7,20 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-/**
- * Created by Lucas on 3/26/2015.
- */
 public class NavDrawer{
 
-    /***** Navigation Drawer Attributes *****/
+    // Navigation Drawer Attributes
     public DrawerLayout mDrawerLayout;
     public ListView mDrawerList;
     public ActionBarDrawerToggle mDrawerToggle;
-    // nav drawer title
+    //Title
     public CharSequence mDrawerTitle;
-    // used to store app title
+    //App Title
     public CharSequence mTitle;
-    // slide menu items
+    //Slide Menu Items
     public String[] navMenuTitles;
     public TypedArray navMenuIcons;
 
     public ArrayList<NavDrawerItem> navDrawerItems;
     public NavDrawerListAdapter adapter;
-    /**********/
-
 }
