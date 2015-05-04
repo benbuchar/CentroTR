@@ -58,8 +58,6 @@ public class BusRoute {
             }
             map.clear();
             loadRoute(map);
-            Bus b = new Bus(map);
-            b.track();
         }
     }
 

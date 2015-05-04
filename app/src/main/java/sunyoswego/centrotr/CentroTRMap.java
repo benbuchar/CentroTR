@@ -160,6 +160,8 @@ public class CentroTRMap extends FragmentActivity {
         switch (position) {
             case 0:
                 currentRoute.change(mMap, "blue");
+                Bus b = new Bus(mMap);
+                b.track();
                 break;
             case 1:
                 currentRoute.change(mMap, "green");

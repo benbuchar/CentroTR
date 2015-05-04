@@ -20,12 +20,12 @@ public class Bus {
         theBusArrow = this.map.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Bus")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busarrow)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.our_busarrow)));
         theBusArrow.setAnchor(0.5f, 0.5f);
         theBus = this.map.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Bus")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.our_busicon)));
         theBus.setAnchor(0.5f, 0.5f);
     }
 
